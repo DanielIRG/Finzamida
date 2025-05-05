@@ -6,8 +6,7 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import finzamida.Conexion;
 import finzamida.UIUtils;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,11 +16,12 @@ import javax.swing.UIManager;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.*;
 
-public class Cuentas extends javax.swing.JFrame {
+public class Cuentas extends javax.swing.JFrame implements MouseListener, MouseMotionListener {
 
     Conexion conexion = new Conexion();
     Connection reg = conexion.getConexion();
     private int idUsuario;
+    private int mouseY;
 
     public Cuentas(int idUsuario) {
         setUndecorated(true);
@@ -34,7 +34,8 @@ public class Cuentas extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println("Font unavailable: " + e);
         }
-
+        PanelRoundFondo.addMouseListener(this);
+        PanelRoundFondo.addMouseMotionListener(this);
         this.idUsuario = idUsuario;
         cargarCuentas();
     }
@@ -168,7 +169,7 @@ public class Cuentas extends javax.swing.JFrame {
 
         btnAgregarCuenta.setForeground(new java.awt.Color(55, 0, 43));
         btnAgregarCuenta.setText("Agregar cuenta");
-        btnAgregarCuenta.setBorderColor(new java.awt.Color(55, 36, 85));
+        btnAgregarCuenta.setBorderColor(new java.awt.Color(226, 232, 247));
         btnAgregarCuenta.setColor(new java.awt.Color(226, 232, 247));
         btnAgregarCuenta.setColorOver(new java.awt.Color(176, 179, 185));
         btnAgregarCuenta.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
@@ -464,7 +465,7 @@ public class Cuentas extends javax.swing.JFrame {
             for (java.awt.Component comp : componentesToRemove) {
                 PanelRoundFondo.remove(comp);
             }
-            int y = 100; 
+            int y = 100;
             if (rs.next()) {
                 Items.PanelRound primerPanelCuenta = crearPanelCuenta(
                         rs.getInt("idCuenta"),
@@ -621,4 +622,49 @@ public class Cuentas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al eliminar la cuenta.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        mouseY = e.getY();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        int currentY = e.getY();
+        int deltaY = currentY - mouseY;
+
+        for (java.awt.Component comp : PanelRoundFondo.getComponents()) {
+            if (comp instanceof Items.PanelRound && comp != MenuBotones) {
+                comp.setLocation(comp.getX(), comp.getY() + deltaY);
+            }
+        }
+        PanelRoundFondo.repaint();
+        mouseY = currentY;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // 
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // 
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // 
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        // 
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        //  
+    }
+
 }
